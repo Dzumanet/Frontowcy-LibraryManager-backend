@@ -1,26 +1,141 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Library Manager API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Library Manager API is a backend system designed as part of the final project for the Frontowcy course. It provides functionality for managing a library, including handling users, books, rentals, logs, and authentication. This project demonstrates practical application development skills.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
+
+### Authentication
+- User login and logout using JWT tokens.
+- Role-based access control (admin and client roles).
+- Middleware for guarding routes based on roles.
+
+### User Management
+- Register new users.
+- Update user profiles.
+- View borrowed books and their statuses.
+- Admin access to view all users' activities and rentals.
+
+### Book Management
+- Add new books (admin only).
+- View all available books and their details.
+- Edit and delete books (admin only).
+- Ensure book availability is respected during operations.
+
+### Rental Management
+- Borrow books for a specified period.
+- Return borrowed books.
+- Admin access to view all rentals and force return books if necessary.
+
+### Logs Management
+- Create logs for all actions performed in the system.
+- Retrieve logs filtered by users or actions (admin only).
+
+### System Architecture
+- Built with **NestJS** framework.
+- **MySQL** database integration using TypeORM.
+- **Swagger** documentation for API endpoints.
+- Additional packages and tools used:
+    - **Passport** for authentication.
+    - **JWT** for token-based security.
+    - **Class-Transformer** and **Class-Validator** for data validation and transformation.
+    - **Helmet** for security headers.
+    - **Cookie-Parser** for managing cookies.
+    - **Prettier** and **ESLint** for code formatting and linting.
+    - **Jest** for testing.
+---
+
+## Installation
+
+### Prerequisites
+- Node.js (v16 or later)
+- MySQL database
+- npm or yarn package manager
+
+### Steps
+1. Clone the repository:
+   ```bash
+   git clone <https://github.com/Dzumanet/Frontowcy-LibraryManager-backend.git>
+   
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   or
+   yarn install
+   ```
+
+3. Create a `.env` file in the root directory and configure the following variables:
+   ```env
+   DATABASE_HOST=localhost
+   DATABASE_PORT=3306
+   DATABASE_USER=root
+   DATABASE_PASSWORD=your_password
+   DATABASE_NAME=library_manager
+   JWT_KEY=your_secret_key
+   SAlT_PWD_KEY=your_salt_key
+   PORT=3000
+   ```
+
+4. Run database migrations (if applicable):
+   ```bash
+   npm run typeorm:migration:run
+   ```
+
+5. Start the application:
+   ```bash
+   npm run start:dev
+   or
+   yarn start:dev
+   ```
+
+6. Access the Swagger documentation at `http://localhost:3000/api`.
+
+---
+
+## Modules
+
+### Authentication Module
+- Handles login and logout functionality.
+- Role-based guards for route protection.
+- JWT strategy for validating tokens.
+
+### User Module
+- **Endpoints**:
+    - `POST /user/register` - Register a new user.
+    - `GET /user/me` - Get details of the currently logged-in user.
+    - `PATCH /user/update-profile` - Update user profile.
+    - `GET /user/borrowed-books` - View borrowed books for the logged-in user.
+
+### Book Module
+- **Endpoints**:
+    - `POST /book/register` - Add a new book (admin only).
+    - `GET /books` - Retrieve all books.
+    - `GET /book/:id` - Retrieve a book by ID.
+    - `PUT /book/:id` - Update a book (admin only).
+    - `DELETE /book/:id` - Delete a book (admin only).
+
+### Rental Module
+- **Endpoints**:
+    - `POST /rental/create` - Create a new rental.
+    - `POST /rental/return/:rentalId` - Return a book.
+    - `GET /rentals` - Retrieve all rentals (admin only).
+    - `GET /rental/book/:bookId` - Get rental details for a specific book.
+    - `GET /rentals/user/:userId` - Retrieve rentals by user (admin only).
+
+### Log Module
+- **Endpoints**:
+    - `POST /log` - Create a log entry.
+    - `GET /log` - Retrieve all logs (admin only).
+    - `GET /log/user/:userId` - Retrieve logs by user (admin only).
+
+---
+
+## Development
+
+### Code Formatting
+- Prettier configuration is included in the project for consistent formatting.
+- Run `npm run format` to format the code.
 
 ## Description
 
@@ -45,55 +160,3 @@ $ yarn run start:dev
 $ yarn run start:prod
 ```
 
-## Run tests
-
-```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ yarn install -g mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
