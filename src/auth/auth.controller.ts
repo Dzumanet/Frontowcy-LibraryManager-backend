@@ -14,6 +14,7 @@ import { UserEntity } from '../user/user.entity';
 import { UserObj } from '../decorators/user-obj.decorator';
 import { Response } from 'express';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { LoginResponseDto } from './dto/login-response.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -25,7 +26,10 @@ export class AuthController {
     @ApiOperation({ summary: 'Log in a user' })
     @ApiResponse({ status: 200, description: 'User successfully logged in.' })
     @ApiResponse({ status: 400, description: 'Invalid login details.' })
-    async login(@Body() req: AuthLoginDto, @Res() res: Response): Promise<any> {
+    async login(
+        @Body() req: AuthLoginDto,
+        @Res({ passthrough: true }) res: Response,
+    ): Promise<LoginResponseDto> {
         return this.authService.login(req, res);
     }
 
@@ -34,9 +38,11 @@ export class AuthController {
     @ApiResponse({ status: 200, description: 'User is logged in.' })
     @ApiResponse({ status: 401, description: 'Unauthorized access.' })
     @UseGuards(AuthGuard('jwt'))
-    async loginCheck(@Body() loggedIn: boolean, @UserObj() user: UserEntity) {
+    async loginCheck(@UserObj() user: UserEntity) {
         return {
-            loggedIn: true,
+            userId: user.id,
+            firstName: user.firstName,
+            role: user.role,
         };
     }
 

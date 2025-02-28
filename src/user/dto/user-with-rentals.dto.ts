@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { RentalResponseDto } from '../../rental/dto/rental-response.dto';
 import { Expose, Type } from 'class-transformer';
+import { LoanResponseDto } from '../../loan/dto/loan-response.dto';
 
-export class UserWithRentalsDto {
+export class UserWithLoansDto {
     @ApiProperty({
-        description: 'List of rentals associated with the user.',
-        type: [RentalResponseDto],
+        description: 'List of loans associated with the user.',
+        type: [LoanResponseDto],
     })
     @Expose()
-    @Type(() => RentalResponseDto)
-    rentals: RentalResponseDto[];
+    @Type(() => LoanResponseDto)
+    loans: LoanResponseDto[];
 }

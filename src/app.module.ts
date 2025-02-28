@@ -4,10 +4,11 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { BookModule } from './book/book.module';
 import { UserModule } from './user/user.module';
-import { RentalModule } from './rental/rental.module';
+import { LoanModule } from './loan/loan.module';
 import { LogModule } from './log/log.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { BookImageModule } from './bookimage/bookimage.module';
 
 @Module({
     imports: [
@@ -22,16 +23,19 @@ import { ConfigModule } from '@nestjs/config';
             username: process.env.DATABASE_USER,
             password: process.env.DATABASE_PASSWORD,
             database: process.env.DATABASE_NAME,
-            entities: ['dist/**/**.entity{.ts,.js}'],
+            // entities: ['dist/**/**.entity{.ts,.js}'],
+            entities: [__dirname + '/**/*.entity{.ts,.js}'],
             bigNumberStrings: false,
+            autoLoadEntities: true,
             logging: true,
             synchronize: false,
         }),
         AuthModule,
         BookModule,
         UserModule,
-        RentalModule,
+        LoanModule,
         LogModule,
+        BookImageModule,
     ],
     controllers: [AppController],
     providers: [AppService],

@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Param,
+    UseGuards,
+    Query,
+} from '@nestjs/common';
 import {
     ApiTags,
     ApiOperation,
@@ -7,12 +15,15 @@ import {
     ApiQuery,
 } from '@nestjs/swagger';
 import { LogService } from './log.service';
-import { CreateLogDto, LogActionEnum, StatusEnum } from './dto/create-log.dto';
+import { CreateLogDto } from './dto/create-log.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from '../guards/role.guard';
 import { Roles } from '../decorators/roles.decorator';
 import { LogResponseDto } from './dto/log-response.dto';
 import { plainToInstance } from 'class-transformer';
+import { LogActionEnum, StatusEnum } from './log.entity';
+import { GetLogsFilterDto } from './dto/get-logs-filter.dto';
+import { LogListResponseDto } from './dto/logs-list-response.dto';
 
 @ApiTags('Log')
 @Controller('log')
@@ -47,20 +58,22 @@ export class LogController {
         });
     }
 
-    @ApiOperation({ summary: 'Get all log entries (Admin only).' })
-    @ApiResponse({
-        status: 200,
-        description: 'List of all log entries.',
-        type: [LogResponseDto],
-    })
     @Get()
     @UseGuards(AuthGuard('jwt'), RoleGuard)
     @Roles('admin')
-    async getAllLogs(): Promise<LogResponseDto[]> {
-        const logs = await this.logsService.getAllLogs();
-        return plainToInstance(LogResponseDto, logs, {
-            excludeExtraneousValues: true,
-        });
+    @ApiOperation({
+        summary:
+            'Get all log entries with pagination and filtering (Admin only).',
+    })
+    @ApiResponse({
+        status: 200,
+        description: 'List of log entries with pagination.',
+        type: [LogResponseDto],
+    })
+    async getAllLogs(
+        @Query() filterDto: GetLogsFilterDto,
+    ): Promise<LogListResponseDto> {
+        return this.logsService.getAllLogs(filterDto);
     }
 
     @ApiOperation({ summary: 'Get log entries by user (Admin only).' })

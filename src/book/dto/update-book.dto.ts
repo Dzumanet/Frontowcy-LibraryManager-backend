@@ -58,4 +58,13 @@ export class UpdateBookDto {
     @IsInt()
     @Min(1)
     totalCopies?: number;
+
+    @ApiProperty({
+        example: 'PROGRAMMING',
+        description:
+            'The updated category of the book, selected from predefined categories.',
+        required: false,
+    })
+    @IsString()
+    category: string;
 }

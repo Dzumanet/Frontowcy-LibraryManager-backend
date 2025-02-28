@@ -4,9 +4,10 @@ import {
     Post,
     Get,
     Delete,
-    Put,
     Param,
     UseGuards,
+    Query,
+    Patch,
 } from '@nestjs/common';
 import { BookService } from './book.service';
 import { RegisterBookDto } from './dto/register-book.dto';
@@ -23,6 +24,8 @@ import { Roles } from '../decorators/roles.decorator';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { DeleteBookResponseDto } from './dto/delete-book-response.dto';
 import { BookDto } from './dto/book.dto';
+import { GetBooksFilterDto } from './dto/get-books-filter.dto';
+import { BooksListResponseDto } from './dto/books-list-response.dto';
 
 @ApiTags('Books')
 @Controller()
@@ -51,10 +54,12 @@ export class BookController {
     @ApiResponse({
         status: 200,
         description: 'List of all books.',
-        type: [BookDto],
+        type: BooksListResponseDto,
     })
-    async getAllBooks(): Promise<BookDto[]> {
-        return this.bookService.getAllBooks();
+    async getAllBooks(
+        @Query() filterDto: GetBooksFilterDto,
+    ): Promise<BooksListResponseDto> {
+        return this.bookService.getAllBooks(filterDto);
     }
 
     @Get('/book/:id')
@@ -85,7 +90,7 @@ export class BookController {
         return this.bookService.deleteBook(id);
     }
 
-    @Put('/book/:id')
+    @Patch('/book/:id')
     @UseGuards(AuthGuard('jwt'), RoleGuard)
     @Roles('admin')
     @ApiOperation({ summary: 'Update a book by its ID (Admin only).' })

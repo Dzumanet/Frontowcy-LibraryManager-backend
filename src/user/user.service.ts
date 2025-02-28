@@ -44,6 +44,7 @@ export class UserService {
             RegisterUserResponseDto,
             {
                 ...user,
+                id: user.id,
                 message: 'User has been successfully registered.',
                 exists: false,
                 accountCreated: true,
@@ -88,17 +89,17 @@ export class UserService {
     ): Promise<UserBorrowedBooksResponseDto> {
         const user = await UserEntity.findOne({
             where: { id: userId },
-            relations: ['rentals', 'rentals.book'],
+            relations: ['loans', 'loans.book'],
         });
         if (!user) {
             throw new NotFoundException('User not found.');
         }
-        const borrowedBooks = user.rentals
-            .filter((rental) => rental.rentalStatus === 'borrowed')
-            .map((rental) => ({
-                id: rental.book.id,
-                title: rental.book.title,
-                author: rental.book.author,
+        const borrowedBooks = user.loans
+            .filter((loan) => loan.loanStatus === 'borrowed')
+            .map((loan) => ({
+                id: loan.book.id,
+                title: loan.book.title,
+                author: loan.book.author,
             }));
         return plainToInstance(UserBorrowedBooksResponseDto, {
             borrowedBooksCount: borrowedBooks.length,

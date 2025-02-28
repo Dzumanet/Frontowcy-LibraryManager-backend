@@ -7,6 +7,7 @@ import {
     MinLength,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { BookCategoryEnum } from '../book.entity';
 
 export class RegisterBookDto {
     @ApiProperty({
@@ -14,7 +15,7 @@ export class RegisterBookDto {
         description: 'The title of the book',
     })
     @IsString()
-    @MinLength(1, { message: 'Title must have at least 1 character.' })
+    @MinLength(3, { message: 'Title must have at least 3 character.' })
     title: string;
 
     @ApiProperty({
@@ -22,7 +23,7 @@ export class RegisterBookDto {
         description: 'The author of the book',
     })
     @IsString()
-    @MinLength(1, { message: 'Author must have at least 1 character.' })
+    @MinLength(3, { message: 'Author must have at least 3 character.' })
     author: string;
 
     @ApiProperty({
@@ -50,4 +51,19 @@ export class RegisterBookDto {
     @IsInt({ message: 'Total number of copies must be an integer.' })
     @Min(1, { message: 'Total number of copies must be at least 1.' })
     totalCopies: number;
+
+    @ApiProperty({
+        example: 'Programming',
+        description: 'The category of the book',
+    })
+    @IsString()
+    category: BookCategoryEnum;
+
+    @ApiProperty({
+        example: 'https://example.com/book-cover.jpg',
+        description: 'URL to the book cover image',
+        required: false,
+    })
+    @IsOptional()
+    bookPictureUrl?: string | null;
 }

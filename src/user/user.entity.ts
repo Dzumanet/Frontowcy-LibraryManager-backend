@@ -8,7 +8,7 @@ import {
     OneToMany,
 } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
-import { RentalEntity } from '../rental/rental.entity';
+import { LoanEntity } from '../loan/loan.entity';
 
 @Entity('user')
 export class UserEntity extends BaseEntity {
@@ -91,7 +91,7 @@ export class UserEntity extends BaseEntity {
     @Expose()
     profilePictureUrl?: string | null;
 
-    @OneToMany(() => RentalEntity, (rental) => rental.user)
+    @OneToMany(() => LoanEntity, (loan) => loan.user)
     @Expose()
-    rentals: RentalEntity[];
+    loans: LoanEntity[];
 }

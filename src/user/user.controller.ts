@@ -34,6 +34,7 @@ export class UserController {
     async registerUser(
         @Body() newUser: RegisterUserDto,
     ): Promise<RegisterUserResponseDto> {
+        console.log(newUser);
         return this.userService.registerUser(newUser);
     }
 

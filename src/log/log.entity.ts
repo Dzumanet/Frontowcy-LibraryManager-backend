@@ -5,7 +5,30 @@ import {
     CreateDateColumn,
     BaseEntity,
 } from 'typeorm';
-import { LogActionEnum } from './dto/create-log.dto';
+
+export enum LogActionEnum {
+    BORROWED = 'borrowed',
+    RETURNED = 'returned',
+    FORCED_RETURNED = 'forced_returned',
+    OVERDUE = 'overdue',
+    LOGIN = 'login',
+    LOGOUT = 'logout',
+    UPDATE_PROFILE = 'updateProfile',
+    CREATE_PROFILE = 'createProfile',
+    DELETE_ACCOUNT = 'deleteAccount',
+    ADD_BOOK = 'addBook',
+    EDIT_BOOK = 'editBook',
+    DELETE_BOOK = 'deleteBook',
+    UPLOAD_BOOK_IMAGE = 'uploadImage',
+    DELETE_BOOK_IMAGE = 'deleteImage',
+}
+
+export enum StatusEnum {
+    SUCCESS = 'success',
+    FAILED = 'failed',
+    PENDING = 'pending',
+    CANCELLED = 'cancelled',
+}
 
 @Entity('log')
 export class LogEntity extends BaseEntity {
@@ -15,30 +38,12 @@ export class LogEntity extends BaseEntity {
     @CreateDateColumn()
     timestamp: Date;
 
-    @Column({ type: 'uuid' })
-    userId: string;
-
-    @Column({
-        type: 'varchar',
-        length: 320,
-    })
-    email: string;
+    @Column({ type: 'uuid', nullable: true })
+    userId: string | null;
 
     @Column({
         type: 'enum',
-        enum: [
-            'borrowed',
-            'returned',
-            'overdue',
-            'login',
-            'logout',
-            'updateProfile',
-            'createProfile',
-            'deleteAccount',
-            'addBook',
-            'editBook',
-            'deleteBook',
-        ],
+        enum: LogActionEnum,
     })
     action: LogActionEnum;
 
@@ -48,7 +53,6 @@ export class LogEntity extends BaseEntity {
     @Column({
         type: 'varchar',
         length: 255,
-        nullable: true,
     })
-    status?: string;
+    status: StatusEnum;
 }

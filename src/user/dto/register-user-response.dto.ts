@@ -2,6 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
 export class RegisterUserResponseDto {
+    @Expose()
+    id: number;
     @ApiProperty({
         description: 'The email of the registered user.',
         example: 'user@example.com',
@@ -29,7 +31,7 @@ export class RegisterUserResponseDto {
 
     @ApiProperty({
         description: 'The library card number assigned to the user.',
-        example: '12345-67890',
+        example: 'LIB-455ECA',
         required: false,
     })
     @Expose()

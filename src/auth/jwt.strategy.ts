@@ -19,24 +19,25 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
             secretOrKey: process.env.JWT_KEY,
         } as StrategyOptionsWithRequest);
     }
-    async validate(payload: JwtPayload, done: (error, user) => void) {
-        if (!payload || !payload.id) {
-            return done(new UnauthorizedException(), false);
-        }
-        const user = await UserEntity.findOne({
-            where: { currentTokenId: payload.id },
-        });
-        if (!user) {
-            return done(new UnauthorizedException(), false);
-        }
 
-        if (!payload.role) {
-            return done(
-                new UnauthorizedException('Role is missing in token'),
-                false,
-            );
-        }
+    async validate(
+        payload: JwtPayload,
+        done: (error: any, user?: any) => void,
+    ) {
+        try {
+            if (!payload || !payload.id) {
+                return done(new UnauthorizedException(), false);
+            }
+            const user = await UserEntity.findOne({
+                where: { currentTokenId: payload.id },
+            });
+            if (!user) {
+                return done(new UnauthorizedException(), false);
+            }
 
-        done(null, user);
+            done(null, user);
+        } catch (error) {
+            done(error, false);
+        }
     }
 }

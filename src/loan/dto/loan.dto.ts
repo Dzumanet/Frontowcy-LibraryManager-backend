@@ -1,15 +1,16 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 import { BookDto } from '../../book/dto/book.dto';
+import { LoanStatusEnum } from '../loan.entity';
 
-export class RentalDto {
-    @ApiProperty({ description: 'Unique ID of the rental' })
+export class LoanDto {
+    @ApiProperty({ description: 'Unique ID of the loan' })
     @Expose()
     id: string;
 
     @ApiProperty({ description: 'Date when the book was rented' })
     @Expose()
-    rentalDate: Date;
+    loanDate: Date;
 
     @ApiProperty({ description: 'Date when the book is due' })
     @Expose()
@@ -21,9 +22,9 @@ export class RentalDto {
     @Expose()
     returnedAt?: Date;
 
-    @ApiProperty({ description: 'Current status of the rental' })
+    @ApiProperty({ description: 'Current status of the loan' })
     @Expose()
-    rentalStatus: string;
+    loanStatus: LoanStatusEnum;
 
     @ApiProperty({ description: 'Details of the rented book' })
     @Expose()

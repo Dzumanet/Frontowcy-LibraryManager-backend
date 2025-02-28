@@ -1,4 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { BookCategoryEnum } from '../book.entity';
+import { Expose } from 'class-transformer';
+import { IsOptional } from 'class-validator';
 
 export class BooksListDto {
     @ApiProperty({
@@ -24,4 +27,25 @@ export class BooksListDto {
         description: 'The publication year of the book.',
     })
     year: number;
+
+    @ApiProperty({
+        example: '8',
+        description: 'Available copies of the book.',
+    })
+    @Expose()
+    availableCopies: number;
+
+    @ApiProperty({
+        description: 'Picture of the book.',
+    })
+    @IsOptional()
+    @Expose()
+    bookPictureUrl: string;
+
+    @ApiProperty({
+        example: 'PROGRAMMING',
+        description:
+            'The category of the book, selected from predefined categories.',
+    })
+    category: BookCategoryEnum;
 }

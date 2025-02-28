@@ -6,17 +6,16 @@ import { v4 as uuid } from 'uuid';
 import { AuthLoginDto } from './dto/auth-login.dto';
 import { hashPwd } from '../utils/hash-pwd';
 import { Response } from 'express';
+import { LoginResponseDto } from './dto/login-response.dto';
+import { use } from 'passport';
 
 @Injectable()
 export class AuthService {
-    private createToken(
-        currentTokenId: string,
-        role: string,
-    ): {
+    private createToken(currentTokenId: string): {
         accessToken: string;
         expiresIn: number;
     } {
-        const payload: JwtPayload = { id: currentTokenId, role };
+        const payload: JwtPayload = { id: currentTokenId };
         const expiresIn = 60 * 60 * 24;
         const accessToken = sign(payload, process.env.JWT_KEY, { expiresIn });
 
@@ -41,7 +40,7 @@ export class AuthService {
         return token;
     }
 
-    async login(req: AuthLoginDto, res: Response): Promise<any> {
+    async login(req: AuthLoginDto, res: Response): Promise<LoginResponseDto> {
         const user = await UserEntity.findOne({
             where: {
                 libraryCardNumber: req.libraryCardNumber,
@@ -58,10 +57,7 @@ export class AuthService {
         user.lastLogin = new Date();
         await user.save();
 
-        const tokenData = this.createToken(
-            await this.generateToken(user),
-            user.role,
-        );
+        const tokenData = this.createToken(await this.generateToken(user));
 
         res.cookie('jwt', tokenData.accessToken, {
             httpOnly: true,
@@ -70,12 +66,13 @@ export class AuthService {
             path: '/',
         });
 
-        return res.json({
-            loggedIn: true,
+        return {
             userId: user.id,
-            loggedUser: user.libraryCardNumber,
+            firstName: user.firstName,
+            lastName: user.lastName,
             role: user.role,
-        });
+            profilePictureUrl: user.profilePictureUrl,
+        };
     }
 
     async logout(user: UserEntity, res: Response) {

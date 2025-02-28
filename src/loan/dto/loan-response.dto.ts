@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 import { BookDto } from '../../book/dto/book.dto';
 
@@ -16,22 +16,28 @@ class UserDto {
     libraryCardNumber: string;
 }
 
-export class RentalResponseDto {
-    @ApiProperty({ description: 'Unique ID of the rental' })
+export class LoanResponseDto {
+    @ApiProperty({ description: 'Unique ID of the ' })
     @Expose()
     id: string;
 
     @ApiProperty({ description: 'Date when the book was rented' })
     @Expose()
-    rentalDate: Date;
+    loanDate: Date;
+
+    @ApiPropertyOptional({
+        description: 'Date when the book was returned (if applicable)',
+    })
+    @Expose()
+    returnedAt?: Date;
 
     @ApiProperty({ description: 'Date when the book is due' })
     @Expose()
     dueDate: Date;
 
-    @ApiProperty({ description: 'Current status of the rental' })
+    @ApiProperty({ description: 'Current status of the loan' })
     @Expose()
-    rentalStatus: string;
+    loanStatus: string;
 
     @ApiProperty({ description: 'Details of the rented book' })
     @Expose()

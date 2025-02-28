@@ -6,7 +6,31 @@ import {
     BaseEntity,
     OneToMany,
 } from 'typeorm';
-import { RentalEntity } from '../rental/rental.entity';
+import { LoanEntity } from '../loan/loan.entity';
+
+export enum BookCategoryEnum {
+    FICTION = 'fiction',
+    NON_FICTION = 'non_fiction',
+    SCIENCE_FICTION = 'science_fiction',
+    FANTASY = 'fantasy',
+    MYSTERY = 'mystery',
+    HORROR = 'horror',
+    ROMANCE = 'romance',
+    HISTORY = 'history',
+    BIOGRAPHY = 'biography',
+    SCIENCE = 'science',
+    PHILOSOPHY = 'philosophy',
+    PSYCHOLOGY = 'psychology',
+    BUSINESS = 'business',
+    SELF_HELP = 'self_help',
+    EDUCATION = 'education',
+    RELIGION = 'religion',
+    ART = 'art',
+    MUSIC = 'music',
+    COOKING = 'cooking',
+    TRAVEL = 'travel',
+    OTHER = 'other',
+}
 
 @Entity('book')
 export class BookEntity extends BaseEntity {
@@ -34,6 +58,19 @@ export class BookEntity extends BaseEntity {
     @CreateDateColumn()
     createdAt: Date;
 
-    @OneToMany(() => RentalEntity, (rental) => rental.book)
-    rentals: RentalEntity[];
+    @Column({
+        type: 'enum',
+        enum: BookCategoryEnum,
+    })
+    category: BookCategoryEnum;
+
+    @Column({
+        type: 'varchar',
+        length: 255,
+        nullable: true,
+    })
+    bookPictureUrl?: string | null;
+
+    @OneToMany(() => LoanEntity, (loan) => loan.book)
+    loans: LoanEntity[];
 }

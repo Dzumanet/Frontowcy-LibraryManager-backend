@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
+import { BookCategoryEnum } from '../book.entity';
+import { IsOptional, IsString } from 'class-validator';
 
 export class BookDto {
     @ApiProperty({
@@ -24,6 +26,13 @@ export class BookDto {
     author: string;
 
     @ApiProperty({
+        example: 'A comprehensive guide to clean code principles.',
+        description: 'A brief summary or description of the book’s content.',
+    })
+    @Expose()
+    description: string;
+
+    @ApiProperty({
         example: '10',
         description: 'Total copies of the book.',
     })
@@ -43,4 +52,21 @@ export class BookDto {
     })
     @Expose()
     year: number;
+
+    @ApiProperty({
+        example: 'SCIENCE_FICTION',
+        description:
+            'The category of the book. It should be one of the predefined categories.',
+    })
+    @Expose()
+    category: BookCategoryEnum;
+
+    @IsOptional()
+    @IsString()
+    @Expose()
+    bookPictureUrl?: string | null;
+
+    isBorrowed: boolean;
+
+    userIds: string[];
 }

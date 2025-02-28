@@ -4,17 +4,26 @@ import {
     Column,
     ManyToOne,
     JoinColumn,
+    BaseEntity,
 } from 'typeorm';
 import { UserEntity } from '../user/user.entity';
 import { BookEntity } from '../book/book.entity';
 
-@Entity('rental')
-export class RentalEntity {
+export enum LoanStatusEnum {
+    BORROWED = 'borrowed',
+    RETURNED = 'returned',
+    RETURNED_LATE = 'returned_late',
+    OVERDUE = 'overdue',
+    FORCED_RETURNED = 'forced_returned',
+}
+
+@Entity('loan')
+export class LoanEntity extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @Column({ type: 'timestamp' })
-    rentalDate: Date;
+    loanDate: Date;
 
     @Column({
         type: 'timestamp',
@@ -27,22 +36,25 @@ export class RentalEntity {
 
     @Column({
         type: 'enum',
-        enum: ['borrowed', 'returned', 'overdue', 'forced_returned'],
-        default: 'borrowed',
+        enum: LoanStatusEnum,
+        default: LoanStatusEnum.BORROWED,
     })
-    rentalStatus: 'borrowed' | 'returned' | 'overdue' | 'forced_returned';
+    loanStatus: LoanStatusEnum;
 
     @Column({ type: 'uuid' })
     userId: string;
 
-    @ManyToOne(() => UserEntity, (user) => user.rentals, { eager: false })
+    @ManyToOne(() => UserEntity, (user) => user.loans, { eager: false })
     @JoinColumn({ name: 'userId' })
     user: UserEntity;
 
     @Column({ type: 'uuid' })
     bookId: string;
 
-    @ManyToOne(() => BookEntity, (book) => book.rentals, { eager: false })
+    @ManyToOne(() => BookEntity, (book) => book.loans, {
+        eager: false,
+        onDelete: 'RESTRICT',
+    })
     @JoinColumn({ name: 'bookId' })
     book: BookEntity;
 
